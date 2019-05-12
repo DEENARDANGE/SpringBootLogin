@@ -8,9 +8,12 @@ import org.springframework.stereotype.Repository;
 import com.bridgelabz.fundoNoteApp.user.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    public User save(User user);
+    public default  User save(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 //    List<User> findByEmailAndPassword(String email, String password);
     List<User> findByidAndPassword(long id, String password);
