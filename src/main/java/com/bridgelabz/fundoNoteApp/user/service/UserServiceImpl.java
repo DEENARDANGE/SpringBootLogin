@@ -36,57 +36,53 @@ public class UserServiceImpl implements UserService {
 	public UserRepository userRep;
 	String secretKey;
 	String subject;
-	private Long Id;
+	// private int Id;
 
 	@Override
 	public String login(User user) {
 		String password = encryptedPassword(user);
-//		List<User> usrlst = userRep.findByEmailAndPassword(user.getEmail(), user.getPassword());
-		List<User> userList = userRep.findByidAndPassword(user.getId(), password);
+		List<User> userList = userRep.findByIdAndPassword(user.getId(), password);
 		System.out.println("idddd :" + user.getId());
 		System.out.println("SIZE : " + userList.size());
 
 		if (userList.size() > 0 && userList != null) {
 			System.out.println("Sucessful login");
-
-			// System.out.println("varified :"+TokenVerification());
-
 			return jwtToken(password, userList.get(0).getId());
 		} else
 			System.out.println("wrong Id or password");
 		return "wrong id or password";
 	}
 
-	// Update
-	//@RequestMapping(value = "/user", method = RequestMethod.PUT)
-	//public User updateUser(@RequestBody User user, String token) {
-	//@RequestMapping(value = "/updateuser", method = RequestMethod.POST)
 	@Override
-	public User update(HttpServletRequest requst, User user)
-	{
-         String tokenHeader=requst.getHeader("Token");
-         
-		System.out.println("I am  token at impl update method :" + tokenHeader);
-		//int gettingid= tokenVerification(token);
-		int userId = tokenVerification(tokenHeader);
-		int varifiedId=userId;
-		System.out.println("varifiedId : "+varifiedId);
+	public User update(String token, User user) {
+		int varifiedUserId = tokenVerification(token);
 	
-		//System.out.println("######gettingid: " + gettingid);
+	Optional<User> maybeUser = userRep.findById(varifiedUserId);
+	User presentUser = maybeUser.map(existingUser -> {
+		existingUser.setEmail(user.getEmail() !=null ? user.getEmail() : maybeUser.get().getEmail());
+		existingUser.setPhonenumber(user.getPhonenumber() !=null ? user.getPhonenumber() : maybeUser.get().getPhonenumber());
+		existingUser.setName(user.getName() !=null ? user.getName() : maybeUser.get().getName());
+		existingUser.setPassword(user.getPassword() !=null ? encryptedPassword(user) : maybeUser.get().getPassword());
+		return existingUser;
+	}).orElseThrow(() -> new RuntimeException("User Not Found"));
+	
+	return userRep.save(presentUser);
+}	
+	
+	
+	@Override
+	public boolean delete(String token) {
+		int varifiedUserId = tokenVerification(token);
 		
-		// dao.findbyid()gettingid;
-		//dao.save(user);
-		Optional<User> maybeUser = userRep.findById(userId);
-		User presentUser = maybeUser.map(existingUser -> {
-			existingUser.setEmail(user.getEmail());
-			existingUser.setPhonenumber(user.getPhonenumber());
-			return existingUser;
-		}).orElseThrow(() -> new RuntimeException("User Not Found"));
+		//return userRep.deleteById(varifiedUserId);
+		Optional<User> maybeUser = userRep.findById(varifiedUserId);
+		return maybeUser.map(existingUser -> {
+			userRep.delete(existingUser);
+			return true;
+			}).orElseGet(() -> false);
+}
 	
-		userRep.save(presentUser);
-		return  userRep.save(user);
-	}
-
+	
 //	// Delete
 //	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
 //	public void deleteUser(@PathVariable long id) {
@@ -127,102 +123,44 @@ public class UserServiceImpl implements UserService {
 		}
 		System.out.println("generated password :" + generatedPassword);
 
-		/*
-		 * String password = user.getPassword(); System.out.println("password :"
-		 * +password );
-		 * 
-		 * BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); String
-		 * hashedPassword = passwordEncoder.encode(password); String
-		 * pass=passwordEncoder.encode(toString());
-		 * System.out.println("pass is :"+pass); System.out.println(hashedPassword);
-		 * return hashedPassword;
-		 */
 		return generatedPassword;
 
 	}
 
-//
-//	public String jwtToken() {
-//		String id = UUID.randomUUID().toString().replace("-", "");
-//		Date now = new Date();
-//		Date exp = new Date(System.currentTimeMillis() + (1000 * 30)); // 30 seconds
-//
-//		String token = Jwts.builder().setId(id).setIssuedAt(now).setNotBefore(now).setExpiration(exp)
-//				.signWith(SignatureAlgorithm.HS256, base64SecretBytes).compact();
-//		System.out.println("token generation:" + token);
-//		return token;
-//	}
-//
-//	@Override
-//	public String tokenVerification(String token) {
-//		Claims claims = Jwts.parser().setSigningKey(base64SecretBytes).parseClaimsJws(token).getBody();
-//		System.out.println("----------------------------");
-//		System.out.println("ID: " + claims.getId());
-//		System.out.println("Subject: " + claims.getSubject());
-//		System.out.println("Issuer: " + claims.getIssuer());
-//		System.out.println("Expiration: " + claims.getExpiration());
-//		System.out.println("varified token :" + token);
-//		return token;
-//	}
-
-//
-//	String token = jwtToken(secretKey, Id);
-//
-//	String output = tokenVerification(token);
-//
-
 	private static final Key secret = MacProvider.generateKey(SignatureAlgorithm.HS256);
 	private static final byte[] secretBytes = secret.getEncoded();
 	private static final String base64SecretBytes = Base64.getEncoder().encodeToString(secretBytes);
+
 	@Override
-	public String jwtToken(String secretKey, long id) {
+	public String jwtToken(String secretKey, int id) {
 		long nowMillis = System.currentTimeMillis();
 		Date now = new Date(nowMillis);
 
-		JwtBuilder builder = Jwts.builder().
-				setSubject(String.valueOf(id))
-				.setIssuedAt(now)
-				//.setExpiration(now)
+		JwtBuilder builder = Jwts.builder().setSubject(String.valueOf(id)).setIssuedAt(now)
+				// .setExpiration(now)
 				.signWith(SignatureAlgorithm.HS256, base64SecretBytes);
 		System.out.println("jwt token :" + builder.compact());
 		String token = builder.compact();
 
 		return token;
 	}
+
 	@Override
 	public int tokenVerification(String token) {
 		// This line will throw an exception if it is not a signed JWS (as expected)
 		if (StringUtils.isEmpty(token)) {
 			// throw error
 		}
-		Claims claims = Jwts
-				.parser()
-				.setSigningKey(base64SecretBytes)
-				.parseClaimsJws(token)
-				.getBody();
+		Claims claims = Jwts.parser().setSigningKey(base64SecretBytes).parseClaimsJws(token).getBody();
 		System.out.println("ID******************: " + claims.getSubject());
-		
-		
+
 //		System.out.println("Subject: " + claims.getSubject());
 //		System.out.println("Issuer: " + claims.getIssuer());
 //	    System.out.println("Expiration: " + claims.getExpiration());
 //		System.out.println("tokenverification :" + token);
 		System.out.println("Id is varified :" + claims.getSubject());
-		
+
 		return Integer.parseInt(claims.getSubject());
 	}
-//	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-//	public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-//		System.out.println("Updating User " + id);
-//
-//		User currentUser = userService.findById(id);
-//
-//		if (currentUser == null) {
-//			System.out.println("User with id " + id + " not found");
-//			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//		}
-//
-//	}
 
-	
 }

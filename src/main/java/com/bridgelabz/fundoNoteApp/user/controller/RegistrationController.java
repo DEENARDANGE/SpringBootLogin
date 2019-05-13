@@ -1,5 +1,8 @@
 package com.bridgelabz.fundoNoteApp.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,15 +14,17 @@ import com.bridgelabz.fundoNoteApp.user.model.User;
 import com.bridgelabz.fundoNoteApp.user.service.UserService;
 
 @RestController
-@ComponentScan("com.bl.app.service")
 public class RegistrationController {
+	
 	@Autowired
 	UserService userService;
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public User createStudent(@RequestBody User user) {
+	public User createUser(@RequestBody User user) {
 
 		return userService.userRegistration(user);
 	}
+	
+
 
 }
