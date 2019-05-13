@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user")
 public class User {
-	
+
 	@Id
 	private int id;
 	private String name;
@@ -26,10 +26,6 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phonenumber="
 				+ phonenumber + ", status=" + status + ", image=" + image + "]";
 	}
-
-
-
-
 
 	public int getId() {
 		return id;
@@ -62,8 +58,6 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 
 	public String getPhonenumber() {
 		return phonenumber;

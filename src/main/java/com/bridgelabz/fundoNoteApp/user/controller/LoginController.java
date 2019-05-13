@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoNoteApp.user.controller;
 
+import java.util.Optional;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -54,13 +56,8 @@ public class LoginController {
 
 	@RequestMapping(value = "/updateuser", method = RequestMethod.PUT)
 	public void updateuser(@RequestBody User user, HttpServletRequest request) {
-
-		// String token=userService.login(user);
-		// String token = request.getHeader("token");
-
 		System.out.println("I am  token at update method :" + request.getHeader("token"));
 		userService.update(request.getHeader("token"), user);
-
 	}
 
 	@RequestMapping(value = "/deleteuser", method = RequestMethod.DELETE)
@@ -69,6 +66,33 @@ public class LoginController {
 		System.out.println("I am  token at delete method :" + request.getHeader("token"));
 		boolean b = userService.delete(request.getHeader("token"));
 		System.out.println("-->" + b);
+
+	}
+
+	@RequestMapping(value = "/forgotpassword", method = RequestMethod.PUT)
+	public void forgotpassword(@RequestBody User user, HttpServletRequest request) {
+		User userInfo = userService.getUserInfoByEmail(user.getEmail());
+
+		if (userInfo != null) {
+			String token = userService.jwtToken("secretKey", userInfo.getId());
+
+			userService.sendMail(userInfo, request, token);
+
+		}
+	}
+
+	@RequestMapping(value = "/resetpassword", method = RequestMethod.PUT)
+	public void resetPassword(@RequestBody User user, HttpServletRequest request) {
+		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
+		int id = userService.tokenVerification(request.getHeader("token"));
+
+		if (id != 0) {
+
+			Optional<User> userinfo = userService.findById(id);
+			User usr = userinfo.get();
+			usr.setPassword(user.getPassword());
+			userService.update(request.getHeader("token"), usr);
+		}
 
 	}
 
