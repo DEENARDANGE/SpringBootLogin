@@ -16,15 +16,7 @@ public class User {
 	private String phonenumber;
 	private String status;
 	private String image;
-	private int activestate;
 
-	public int getActivestate() {
-		return activestate;
-	}
-
-	public void setActivestate(int activestate) {
-		this.activestate = activestate;
-	}
 
 	public User() {
 		super();

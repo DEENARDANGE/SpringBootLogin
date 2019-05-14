@@ -7,30 +7,28 @@ import javax.servlet.http.HttpServletRequest;
 import com.bridgelabz.fundoNoteApp.user.model.User;
 
 public interface UserService {
+    public String login(User user);
 
-	public String login(User user);
+    public User update(String token, User user);
 
-	public User update(String token, User user);
+    public User userRegistration(User user, HttpServletRequest request);
 
-	public User userRegistration(User user);
+    public String encryptedPassword(User user);
 
-	public String encryptedPassword(User user);
+    public int tokenVerification(String token);
 
-	public int tokenVerification(String token);
+    String jwtToken(String subject, int id);
 
-	String jwtToken(String subject, int id);
+    public boolean delete(String token);
+    
+    
+    public User getUserInfoByEmail(String email);
+    
+    public  String sendMail(User user,String url,String subject);
 
-	public boolean delete(String token);
+    public Optional<User> findById(int id);
 
-	public User getUserInfoByEmail(String email);
-
-	//public String sendMail(User user, HttpServletRequest request, String token, String urlPattern);
-
-	public Optional<User> findById(int id);
-
-	String sendMail(User user, HttpServletRequest request, String token);
-
-	public String sendActivation(User userInfo, HttpServletRequest request, String token);
-
+    
 
 }
+
