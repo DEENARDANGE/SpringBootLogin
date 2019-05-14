@@ -15,9 +15,9 @@ public interface UserService {
 
     public String encryptedPassword(User user);
 
-    public int tokenVerification(String token);
+  //  public int tokenVerification(String token);
 
-    String jwtToken(String subject, int id);
+  //  String jwtToken(String subject, int id);
 
     public boolean delete(String token);
     
