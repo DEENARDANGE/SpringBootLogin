@@ -69,7 +69,7 @@ public class LoginController {
 
 	}
 
-	@RequestMapping(value = "/forgotpassword", method = RequestMethod.PUT)
+	@RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
 	public void forgotpassword(@RequestBody User user, HttpServletRequest request) {
 		User userInfo = userService.getUserInfoByEmail(user.getEmail());
 
@@ -91,6 +91,33 @@ public class LoginController {
 			Optional<User> userinfo = userService.findById(id);
 			User usr = userinfo.get();
 			usr.setPassword(user.getPassword());
+			userService.update(request.getHeader("token"), usr);
+		}
+
+	}
+	@RequestMapping(value = "/sendmail", method = RequestMethod.POST)
+	public void activation(@RequestBody User user, HttpServletRequest request) {
+		User userInfo = userService.getUserInfoByEmail(user.getEmail());
+
+		if (userInfo != null) {
+			String token = userService.jwtToken("secretKey", userInfo.getId());
+			//String urlPattern="activationStatus";
+
+			userService.sendActivation(userInfo, request, token);
+
+		}
+	}
+
+	@RequestMapping(value = "/activation", method = RequestMethod.PUT)
+	public void activationStatus( HttpServletRequest request) {
+		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
+		int id = userService.tokenVerification(request.getHeader("token"));
+
+		if (id != 0) {
+
+			Optional<User> userinfo = userService.findById(id);
+			User usr = userinfo.get();
+			usr.setActivestate(1);
 			userService.update(request.getHeader("token"), usr);
 		}
 

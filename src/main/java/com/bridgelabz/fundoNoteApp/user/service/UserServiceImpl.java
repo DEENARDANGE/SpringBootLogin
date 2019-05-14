@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
 		Optional<User> maybeUser = userRep.findById(varifiedUserId);
 		User presentUser = maybeUser.map(existingUser -> {
 			existingUser.setEmail(user.getEmail() != null ? user.getEmail() : maybeUser.get().getEmail());
+			existingUser.setActivestate(1);
 			existingUser.setPhonenumber(
 					user.getPhonenumber() != null ? user.getPhonenumber() : maybeUser.get().getPhonenumber());
 			existingUser.setName(user.getName() != null ? user.getName() : maybeUser.get().getName());
@@ -154,8 +155,7 @@ public class UserServiceImpl implements UserService {
 						
 		
 	}
-	
-	public  String sendMail(User user,HttpServletRequest request,String token) {
+public  String sendMail(User user,HttpServletRequest request,String token) {
 		
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -181,9 +181,37 @@ public class UserServiceImpl implements UserService {
 			
 	}
 
+   public  String sendActivation(User user,HttpServletRequest request,String token) {
+		
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		
+		StringBuffer requestUrl = request.getRequestURL();
+		System.out.println(requestUrl);
+		String activateStatusUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
+		activateStatusUrl = activateStatusUrl + "/activation/" +"token="+ token;
+		//System.out.println(forgotPasswordUrl);
+
+		try {
+			helper.setTo(user.getEmail());
+			helper.setText(activateStatusUrl);
+			helper.setSubject("Token Based Auth");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return "Error while sending mail ..";
+		}
+		sender.send(message);
+		return "Mail Sent Success!";
+		
+			
+	}
+
 	public Optional<User> findById(int id) {
 		return userRep.findById(id);
 		
 	}
+
+	
 
 }

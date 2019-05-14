@@ -11,7 +11,7 @@ import com.bridgelabz.fundoNoteApp.user.service.UserService;
 
 @RestController
 public class RegistrationController {
-	
+
 	@Autowired
 	UserService userService;
 
@@ -20,7 +20,5 @@ public class RegistrationController {
 
 		return userService.userRegistration(user);
 	}
-	
-
 
 }
