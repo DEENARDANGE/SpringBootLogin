@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoNoteApp.user.model.User;
 import com.bridgelabz.fundoNoteApp.user.service.UserService;
+import com.bridgelabz.fundoNoteApp.util.JsonToken;
 import com.bridgelabz.fundoNoteApp.util.Util;
 
 @RestController
 public class LoginController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	public JsonToken jsonToken;
 
-	Util noteUtil;
+	//Util noteUtil;
 
 	@Autowired
 	private JavaMailSender sender;
@@ -77,7 +80,7 @@ public class LoginController {
 		User userInfo = userService.getUserInfoByEmail(user.getEmail());
 
 		if (userInfo != null) {
-			String token = noteUtil.jwtToken("secretKey", userInfo.getId());
+			String token = jsonToken.jwtToken("secretKey", userInfo.getId());
 
 			StringBuffer requestUrl = request.getRequestURL();
 			System.out.println(requestUrl);
@@ -95,7 +98,7 @@ public class LoginController {
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.PUT)
 	public void resetPassword(@RequestBody User user, HttpServletRequest request) {
 		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
-		int id = noteUtil.tokenVerification(request.getHeader("token"));
+		int id = jsonToken.tokenVerification(request.getHeader("token"));
 
 		if (id != 0) {
 
@@ -113,7 +116,7 @@ public class LoginController {
 		User userInfo = userService.getUserInfoByEmail(user.getEmail());
 
 		if (userInfo != null) {
-			String token = noteUtil.jwtToken("secretKey", userInfo.getId());
+			String token = jsonToken.jwtToken("secretKey", userInfo.getId());
 
 			StringBuffer requestUrl = request.getRequestURL();
 			System.out.println(requestUrl);
@@ -131,7 +134,7 @@ public class LoginController {
 	@RequestMapping(value = "/activestatus", method = RequestMethod.PUT)
 	public void activestatus(HttpServletRequest request) {
 		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
-		int id = noteUtil.tokenVerification(request.getHeader("token"));
+		int id = jsonToken.tokenVerification(request.getHeader("token"));
 
 		if (id != 0) {
 

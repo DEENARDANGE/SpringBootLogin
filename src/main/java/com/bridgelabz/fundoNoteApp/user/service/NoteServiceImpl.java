@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoNoteApp.user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.fundoNoteApp.user.model.Note;
 import com.bridgelabz.fundoNoteApp.user.repository.NoteRepository;
 import com.bridgelabz.fundoNoteApp.util.JsonToken;
-import com.bridgelabz.fundoNoteApp.util.Util;
 
 @Service
 @Transactional
@@ -20,39 +20,49 @@ public class NoteServiceImpl implements NoteService {
 	public NoteRepository noteRep;
 	@Autowired
 	public JsonToken jsonToken;
-	
-	 //Util noteUtil;
-	
-	
+
 	@Override
 	public Note createNote(String token, Note note) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
-		System.out.println("note creation :"+varifiedUserId);
-		/*
-		 * noteRep.save(note); Optional<Note> newNote =
-		 * noteRep.findById(varifiedUserId); if (newNote != null) {
-		 * System.out.println("Sucessfull created"); } else {
-		 * System.out.println("Somthing went wrong!!!!!"); } return null;
-		 */
-		
-		note.setId(varifiedUserId);
+		System.out.println("note creation :" + varifiedUserId);
+		note.setUserId(varifiedUserId);
 		return noteRep.save(note);
 	}
 
 	@Override
-	public void updateNote(String token, Note note) {
+	public Note updateNote(String token, Note note) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
+		System.out.println("varifiedUserId :" + varifiedUserId);
+		Optional<Note> maybeNote = noteRep.findByUserIdAndNoteId(varifiedUserId, note.getNoteId());
+		System.out.println("maybeNote :" + maybeNote);
+		Note presentNote = maybeNote.map(existingNote -> {
+			System.out.println("noteee here");
+			existingNote.setDiscription(
+					note.getDiscription() != null ? note.getDiscription() : maybeNote.get().getDiscription());
+			existingNote.setTitle(note.getTitle() != null ? note.getTitle() : maybeNote.get().getTitle());
+			return existingNote;
+		}).orElseThrow(() -> new RuntimeException("Note Not Found"));
 
+		return noteRep.save(presentNote);
 	}
 
 	@Override
-	public boolean deleteNote(String token) {
+	public boolean deleteNote(String token, Note note) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
-        Optional<Note> maybeNote = noteRep.findById(varifiedUserId);
-        return maybeNote.map(existingNote -> {
-        	noteRep.delete(existingNote);
-            return true;
-        }).orElseGet(() -> false);
+		noteRep.deleteByUserIdAndNoteId(varifiedUserId, note.getNoteId());
+		return true;
+	}
+
+	@Override
+	public List<Note> fetchNote(String token) {
+		int varifiedUserId = jsonToken.tokenVerification(token);
+		System.out.println("i m in fetch :"+varifiedUserId);
+//		public List getAllNote() {
+//			return (List) noteRep.findAll();
+//		}
+		List<Note> notes = (List<Note>) noteRep.findByUserId(varifiedUserId);
+	
+		return notes;
 	}
 
 }

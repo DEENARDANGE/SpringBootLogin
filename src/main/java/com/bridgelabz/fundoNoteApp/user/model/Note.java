@@ -2,6 +2,7 @@ package com.bridgelabz.fundoNoteApp.user.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,7 +12,8 @@ import javax.persistence.Table;
 public class Note {
 
 	@Id
-	private int noteid;
+	@Column(name = "noteid")
+	private int noteId;
 	private String title;
 	private String discription;
 	private Timestamp creadtedtime;
@@ -19,27 +21,96 @@ public class Note {
 	private boolean isarchive;
 	private boolean ispinned;
 	private boolean intrash;
-	private int id;
+	@Column(name = "id")
+	private int userId;
 
-	public Note() {
-		super();
+	
+
+	public int getNoteId() {
+		return noteId;
 	}
 
-	public int getId() {
-		return id;
+
+
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+
+
+	public Timestamp getCreadtedtime() {
+		return creadtedtime;
 	}
 
-	public int getNoteid() {
-		return noteid;
+
+
+	public void setCreadtedtime(Timestamp creadtedtime) {
+		this.creadtedtime = creadtedtime;
 	}
 
-	public void setNoteid(int noteid) {
-		this.noteid = noteid;
+
+
+	public Timestamp getUpdatetime() {
+		return updatetime;
 	}
+
+
+
+	public void setUpdatetime(Timestamp updatetime) {
+		this.updatetime = updatetime;
+	}
+
+
+
+	public boolean isIsarchive() {
+		return isarchive;
+	}
+
+
+
+	public void setIsarchive(boolean isarchive) {
+		this.isarchive = isarchive;
+	}
+
+
+
+	public boolean isIspinned() {
+		return ispinned;
+	}
+
+
+
+	public void setIspinned(boolean ispinned) {
+		this.ispinned = ispinned;
+	}
+
+
+
+	public boolean isIntrash() {
+		return intrash;
+	}
+
+
+
+	public void setIntrash(boolean intrash) {
+		this.intrash = intrash;
+	}
+
+
+
+	public int getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
+
+
 
 	public String getTitle() {
 		return title;
@@ -59,7 +130,7 @@ public class Note {
 
 	@Override
 	public String toString() {
-		return "User [noteid=" + noteid + ", title=" + title + ", discription=" + discription + ", createdtime="
+		return "User [noteid=" + noteId + ", title=" + title + ", discription=" + discription + ", createdtime="
 				+ creadtedtime + ", updatetime=" + updatetime + ", isarchive=" + isarchive + ", ispinned=" + ispinned
 				+ ",intrash=" + intrash + "]";
 	}
