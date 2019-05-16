@@ -17,10 +17,11 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
 	public void deleteByUserIdAndNoteId(int varifiedUserId, int noteId);
 
-	//public List<Note> findAll(Optional<Note> findByUserId);
+	// public List<Note> findAll(Optional<Note> findByUserId);
 
-	//public List<Note> findOne(Optional<Note> findByUserId);
+	// public List<Note> findOne(Optional<Note> findByUserId);
 
 	public List<Note> findAll();
+
 
 }

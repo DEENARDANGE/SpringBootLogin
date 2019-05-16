@@ -27,7 +27,6 @@ public class NoteController {
 	}
 
 	// update
-	
 
 	@RequestMapping(value = "/updateNote", method = RequestMethod.PUT)
 	public Note updateNote(@RequestBody Note note, HttpServletRequest request) {
@@ -38,17 +37,15 @@ public class NoteController {
 	// delete
 
 	@RequestMapping(value = "/deleteNote", method = RequestMethod.DELETE)
-	public void deleteNote(@RequestBody Note note,HttpServletRequest request) {
+	public void deleteNote(@RequestBody Note note, HttpServletRequest request) {
 		System.out.println("I am token at delete method :" + request.getHeader("token"));
-		boolean deleteNote = noteService.deleteNote(request.getHeader("token"),note);
+		boolean deleteNote = noteService.deleteNote(request.getHeader("token"), note);
 		// System.out.println("-->" + b);
 
 	}
-	
-	
-	//fetch
-	
-		
+
+	// fetch
+
 	@RequestMapping(value = "/fetchNote", method = RequestMethod.GET)
 	public List<Note> fetchNote(HttpServletRequest request) {
 		System.out.println("I am token at get method :" + request.getHeader("token"));
