@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoNoteApp.user.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -143,5 +144,10 @@ public class LoginController {
 			usr.setStatus("1");
 			userService.update(request.getHeader("token"), usr);
 		}
+	}
+	@RequestMapping(value="/fetchData", method = RequestMethod.GET)
+	public List<User> featchUser( HttpServletRequest request){
+		
+		return userService.fetchData();
 	}
 }

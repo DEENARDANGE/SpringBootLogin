@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.bridgelabz.fundoNoteApp.user.model.Label;
 import com.bridgelabz.fundoNoteApp.user.model.User;
 import com.bridgelabz.fundoNoteApp.user.repository.UserRepository;
 import com.bridgelabz.fundoNoteApp.util.JsonToken;
@@ -189,6 +190,13 @@ public class UserServiceImpl implements UserService {
 
 	public Optional<User> findById(int id) {
 		return userRep.findById(id);
+
+	}
+
+	@Override
+	public List<User> fetchData() {
+		List<User> users = userRep.findAll();
+		return users;
 
 	}
 

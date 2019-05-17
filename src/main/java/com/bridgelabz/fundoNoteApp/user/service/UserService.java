@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoNoteApp.user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,11 @@ public interface UserService {
     
     public  String sendMail(User user,String url,String subject);
 
-    public Optional<User> findById(int id);
+   public Optional<User> findById(int id);
+
+	//public List<User> findAll();
+
+	public List<User> fetchData();
 
     
 
