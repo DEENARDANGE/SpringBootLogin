@@ -13,19 +13,16 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	private String phonenumber;
+	private long phonenumber;
 	private String status;
 	private String image;
 
-
-	public User() {
-		super();
+	public long getPhonenumber() {
+		return phonenumber;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phonenumber="
-				+ phonenumber + ", status=" + status + ", image=" + image + "]";
+	public void setPhonenumber(long phonenumber) {
+		this.phonenumber = phonenumber;
 	}
 
 	public int getId() {
@@ -60,14 +57,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getPhonenumber() {
-		return phonenumber;
-	}
-
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -82,5 +71,11 @@ public class User {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", phonenumber="
+				+ phonenumber + ", status=" + status + ", image=" + image + "]";
 	}
 }

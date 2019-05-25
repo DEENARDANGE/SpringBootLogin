@@ -1,6 +1,8 @@
 package com.bridgelabz.fundoNoteApp.util;
 
 import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -14,13 +16,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 
 @Service
-public class Util implements JsonToken {
+public class Utility {
 
 	private static final Key secret = MacProvider.generateKey(SignatureAlgorithm.HS256);
 	private static final byte[] secretBytes = secret.getEncoded();
 	private static final String base64SecretBytes = Base64.getEncoder().encodeToString(secretBytes);
 
-	public String jwtToken(String secretKey, int id) {
+	public static String jwtToken(String secretKey, int id) {
 		long nowMillis = System.currentTimeMillis();
 		Date now = new Date(nowMillis);
 
@@ -32,7 +34,7 @@ public class Util implements JsonToken {
 		return token;
 	}
 
-	public int tokenVerification(String token) {
+	public static int tokenVerification(String token) {
 		// This line will throw an exception if it is not a signed JWS (as expected)
 		if (StringUtils.isEmpty(token)) {
 		}
@@ -43,4 +45,31 @@ public class Util implements JsonToken {
 		return Integer.parseInt(claims.getSubject());
 	}
 
+	public static String encryptedPassword(String password) {
+		//String passwordToHash = getPassword();
+		//System.out.println("password: " + passwordToHash);
+		String generatedPassword = null;
+		try {
+			// Create MessageDigest instance for MD5
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			// Add password bytes to digest
+			md.update(password.getBytes());
+			// Get the hash's bytes
+			byte[] bytes = md.digest();
+			// This bytes[] has bytes in decimal format;
+			// Convert it to hexadecimal format
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < bytes.length; i++) {
+				sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			// Get complete hashed password in hex format
+			generatedPassword = sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		System.out.println("generated password :" + generatedPassword);
+
+		return generatedPassword;
+
+	}
 }

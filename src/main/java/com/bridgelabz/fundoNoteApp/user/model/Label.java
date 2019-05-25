@@ -11,7 +11,6 @@ public class Label {
 
 	@Id
 	private int labelId;
-	
 	private String labelName;
 
 	@Column(name = "id")

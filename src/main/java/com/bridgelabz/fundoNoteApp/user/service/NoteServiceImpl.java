@@ -12,18 +12,18 @@ import com.bridgelabz.fundoNoteApp.user.model.Label;
 import com.bridgelabz.fundoNoteApp.user.model.Note;
 import com.bridgelabz.fundoNoteApp.user.repository.LabelRepository;
 import com.bridgelabz.fundoNoteApp.user.repository.NoteRepository;
-import com.bridgelabz.fundoNoteApp.util.JsonToken;
+import com.bridgelabz.fundoNoteApp.util.Utility;
 
 @Service
 @Transactional
 public class NoteServiceImpl implements NoteService {
 
 	@Autowired
-	public NoteRepository noteRep;
+	private NoteRepository noteRep;
 	@Autowired
-	public LabelRepository labelRep;
+	private LabelRepository labelRep;
 	@Autowired
-	public JsonToken jsonToken;
+	private Utility jsonToken;
 
 	// create Note
 
@@ -63,7 +63,7 @@ public class NoteServiceImpl implements NoteService {
 
 	// fetch note
 	@Override
-	public List<Note> fetchNote(String token) {
+	public List<Note> getNote(String token) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
 		System.out.println("i m in fetch :" + varifiedUserId);
 //		public List getAllNote() {
@@ -113,7 +113,7 @@ public class NoteServiceImpl implements NoteService {
 	}
 
 	@Override
-	public List<Label> fetchLabel(String token) {
+	public List<Label> getLabel(String token) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
 		System.out.println("i m in fetch :" + varifiedUserId);
 //		public List getAllNote() {
