@@ -3,8 +3,12 @@ package com.bridgelabz.fundoNoteApp.user.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +21,8 @@ import com.bridgelabz.fundoNoteApp.user.model.Note;
 import com.bridgelabz.fundoNoteApp.user.service.NoteService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class NoteController {
 
 	@Autowired
@@ -26,9 +31,10 @@ public class NoteController {
 	// Create
 	//@RequestMapping(value = "/createNote", method = RequestMethod.POST)
 	@PostMapping(value="/note")
-	public Note createNote(@RequestBody Note note, HttpServletRequest request) {
+	public ResponseEntity<String> createNote(@RequestBody Note note, HttpServletRequest request,HttpServletResponse response) {
 
-		return noteService.createNote(request.getHeader("token"), note);
+		 noteService.createNote(request.getHeader("token"), note);
+		 return new ResponseEntity<>("{Note Created}", HttpStatus.OK);
 	}
 
 	// update
