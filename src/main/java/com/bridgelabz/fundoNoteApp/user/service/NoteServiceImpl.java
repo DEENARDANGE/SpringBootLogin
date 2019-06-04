@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoNoteApp.user.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ public class NoteServiceImpl implements NoteService {
 		int varifiedUserId = jsonToken.tokenVerification(token);
 		System.out.println("note creation :" + varifiedUserId);
 		note.setUserId(varifiedUserId);
+		LocalDateTime time=LocalDateTime.now();
+		note.setCreadtedtime(time);
 		return noteRep.save(note);
 	}
 
@@ -47,9 +50,11 @@ public class NoteServiceImpl implements NoteService {
 			existingNote.setDiscription(
 					note.getDiscription() != null ? note.getDiscription() : maybeNote.get().getDiscription());
 			existingNote.setTitle(note.getTitle() != null ? note.getTitle() : maybeNote.get().getTitle());
+			
 			return existingNote;
 		}).orElseThrow(() -> new RuntimeException("Note Not Found"));
-
+		LocalDateTime time=LocalDateTime.now();
+		note.setUpdatetime(time);
 		return noteRep.save(presentNote);
 	}
 
@@ -79,7 +84,7 @@ public class NoteServiceImpl implements NoteService {
 	public Label createLabel(String token, Label label) {
 		int varifiedUserId = jsonToken.tokenVerification(token);
 		System.out.println("label creation :" + varifiedUserId);
-		label.setUserId(varifiedUserId);
+		label.findByUserId(varifiedUserId);
 		return labelRep.save(label);
 	}
 

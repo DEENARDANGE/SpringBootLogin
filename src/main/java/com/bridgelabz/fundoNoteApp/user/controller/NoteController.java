@@ -22,7 +22,7 @@ import com.bridgelabz.fundoNoteApp.user.service.NoteService;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class NoteController {
 
 	@Autowired
@@ -34,6 +34,7 @@ public class NoteController {
 	public ResponseEntity<String> createNote(@RequestBody Note note, HttpServletRequest request,HttpServletResponse response) {
 
 		 noteService.createNote(request.getHeader("token"), note);
+		 System.out.println("token : "+request.getHeader("token"));
 		 return new ResponseEntity<>("{Note Created}", HttpStatus.OK);
 	}
 

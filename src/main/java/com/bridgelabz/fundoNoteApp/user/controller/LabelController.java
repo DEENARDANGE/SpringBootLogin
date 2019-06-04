@@ -29,7 +29,7 @@ public class LabelController {
 	// @RequestMapping(value = "/createLabel", method = RequestMethod.POST)
 	@PostMapping(value = "/label")
 	public Label createLabel(@RequestBody Label label, HttpServletRequest request) {
-
+         
 		return noteService.createLabel(request.getHeader("token"), label);
 	}
 

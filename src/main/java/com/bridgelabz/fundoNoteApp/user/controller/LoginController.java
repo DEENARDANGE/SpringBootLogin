@@ -39,7 +39,10 @@ public class LoginController {
 //		response.setHeader("token", token);
 		if (token != null) {
 			response.setHeader("token", token);
-			return new ResponseEntity<>( HttpStatus.OK);
+			response.addHeader("Access-Control-Allow-Headers", "*");
+			response.addHeader("Access-Control-Expose-Headers", "*");
+		//	System.out.println("@@@@aaaa->"+response.getHeader("token"));
+			return new ResponseEntity<> ( HttpStatus.OK);
 		}
 		else {
 		return new ResponseEntity<>("{invalid user}", HttpStatus.BAD_REQUEST);

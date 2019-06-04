@@ -15,9 +15,14 @@ public class Label {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int labelId;
 	private String labelName;
-
-	@Column(name = "id")
+	@Column(name="id")
+	
 	private int userId;
+
+//	@Column(name = "id")
+//	private int userId;
+
+	
 
 	public int getLabelId() {
 		return labelId;
@@ -35,12 +40,17 @@ public class Label {
 		this.labelName = labelName;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
+	public void findByUserId(int varifiedUserId) {
+		// TODO Auto-generated method stub
+		
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+//	public int getUserId() {
+//		return userId;
+//	}
+//
+//	public void setUserId(int userId) {
+//		this.userId = userId;
+//	}
 
 }
