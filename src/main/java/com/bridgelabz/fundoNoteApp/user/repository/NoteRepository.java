@@ -19,4 +19,6 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
 	public List<Note> findAll();
 
+	public void deleteByNoteId(int noteId);
+
 }

@@ -29,23 +29,22 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String login(LoginRequest loginReq) {
-		Optional<User> maybeUser = userRep.findByEmailAndPassword(loginReq.getEmail(),
-				Utility.encryptedPassword(loginReq.getPassword()));
+//		Optional<User> maybeUser = userRep.findByEmailAndPassword(loginReq.getEmail(),
+//				Utility.encryptedPassword(loginReq.getPassword()));
+		Optional<User> maybeUser = userRep.findByEmailAndPasswordAndStatus(loginReq.getEmail(),
+				Utility.encryptedPassword(loginReq.getPassword()),"1");
 		System.out.println(maybeUser);
-
 		if (maybeUser.isPresent()) {
 			System.out.println("Sucessful login");
 			return Utility.jwtToken(Utility.encryptedPassword(loginReq.getPassword()), maybeUser.get().getId());
 		} 
 		else
 		return null;
-
 	}
 
 	@Override
 	public User update(String token, User user) {
 		int varifiedUserId = Utility.tokenVerification(token);
-
 		Optional<User> maybeUser = userRep.findById(varifiedUserId);
 		User presentUser = maybeUser.map(existingUser -> {
 			existingUser.setEmail(user.getEmail() != null ? user.getEmail() : maybeUser.get().getEmail());
@@ -56,7 +55,6 @@ public class UserServiceImpl implements UserService {
 					: maybeUser.get().getPassword());
 			return existingUser;
 		}).orElseThrow(() -> new RuntimeException("User Not Found"));
-
 		return userRep.save(presentUser);
 	}
 
@@ -86,23 +84,17 @@ public class UserServiceImpl implements UserService {
 			activationUrl = activationUrl + "/activestatus/" + "token=" + tokenGen;
 			System.out.println(activationUrl);
 			String subject = "User Activation";
-
 			sendMail(existingUser, activationUrl, subject);
-			// return "Mail Sent Successfully";
 			return existingUser;
-
 		} else {
 			System.out.println("Not sucessful reg");
 		}
 		return null;
-		// return user;
 	}
 
 	public String sendMail(User user, String urlPattern, String subject) {
-
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-
 		try {
 			helper.setTo(user.getEmail());
 			helper.setText(urlPattern);
@@ -113,14 +105,13 @@ public class UserServiceImpl implements UserService {
 		}
 		sender.send(message);
 		return "Mail Sent Success!";
-
 	}
 
 	@Override
 	public List<User> getUser() {
 		List<User> users = userRep.findAll();
+	//	List<User> users = userRep.findByNotEqualsUserId(userid);
 		return users;
 
 	}
-
 }

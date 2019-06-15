@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -76,7 +77,7 @@ public class LoginController {
 	}
 
 	// @RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
-	@PostMapping("/password")
+	@PostMapping("/forgot-password")
 	public String forgotpassword(@RequestBody User user, HttpServletRequest request) {
 		User userInfo = userRep.getUserByEmail(user.getEmail());
 
@@ -86,7 +87,7 @@ public class LoginController {
 			StringBuffer requestUrl = request.getRequestURL();
 			System.out.println(requestUrl);
 			String forgotPasswordUrl = requestUrl.substring(0, requestUrl.lastIndexOf("/"));
-			forgotPasswordUrl = forgotPasswordUrl + "/resetpassword/" + "token=" + token;
+			forgotPasswordUrl = forgotPasswordUrl + "/reset-password/" + "token=" + token;
 			System.out.println(forgotPasswordUrl);
 			String subject = "FOR FORGOT PASSWORD";
 
@@ -97,7 +98,7 @@ public class LoginController {
 	}
 
 	// @RequestMapping(value = "/resetpassword", method = RequestMethod.PUT)
-	@PutMapping("/resetPassword")
+	@PutMapping("/reset-password")
 	public void resetPassword(@RequestBody User user, HttpServletRequest request) {
 		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
 		int id = Utility.tokenVerification(request.getHeader("token"));
@@ -125,6 +126,26 @@ public class LoginController {
 			usr.setStatus("1");
 			userService.update(request.getHeader("token"), usr);
 		}
+	}
+	
+	@GetMapping("/activestatus/{token}")
+	public String activestatus(@PathVariable String token,HttpServletRequest request) {
+		// User userInfo=userService.getUserInfoByEmail(user.getEmail());
+		int id = Utility.tokenVerification(token);
+		
+		String statusMsg="User Activation Failed";
+
+		if (id != 0) {
+
+			Optional<User> userinfo = userRep.findById(id);
+			User usr = userinfo.get();
+			usr.setStatus("1");
+			userService.update(request.getHeader("token"), usr);
+			statusMsg="User Activated Successfully";
+			return statusMsg;
+		}
+		
+		return statusMsg;
 	}
 
 	// @RequestMapping(value = "/get", method = RequestMethod.GET)

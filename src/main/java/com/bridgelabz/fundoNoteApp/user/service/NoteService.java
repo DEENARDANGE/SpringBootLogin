@@ -11,7 +11,7 @@ public interface NoteService {
 
 	Note createNote(String header, Note note);
 
-	boolean deleteNote(String token, Note note);
+	String deleteNote(int NoteId);
 
 	Label updateLabel(String header, Label label);
 

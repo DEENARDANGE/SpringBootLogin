@@ -60,10 +60,11 @@ public class NoteServiceImpl implements NoteService {
 
 	// delete note
 	@Override
-	public boolean deleteNote(String token, Note note) {
-		int varifiedUserId = jsonToken.tokenVerification(token);
-		noteRep.deleteByUserIdAndNoteId(varifiedUserId, note.getNoteId());
-		return true;
+	public String deleteNote( int noteId) {
+		//int varifiedUserId = jsonToken.tokenVerification(token);
+		//noteRep.deleteByUserIdAndNoteId(varifiedUserId, note.getNoteId());
+		noteRep.deleteByNoteId(noteId);
+		return "Deleted";
 	}
 
 	// fetch note
@@ -128,5 +129,11 @@ public class NoteServiceImpl implements NoteService {
 
 		return labels;
 	}
+
+//	@Override
+//	public boolean deleteNote(int NoteId) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 
 }

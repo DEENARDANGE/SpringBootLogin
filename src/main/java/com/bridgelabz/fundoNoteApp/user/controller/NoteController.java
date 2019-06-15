@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,12 +31,12 @@ public class NoteController {
 
 	// Create
 	//@RequestMapping(value = "/createNote", method = RequestMethod.POST)
-	@PostMapping(value="/note")
-	public ResponseEntity<String> createNote(@RequestBody Note note, HttpServletRequest request,HttpServletResponse response) {
+	@PostMapping(value="/note/{token}")
+	public ResponseEntity<Note> createNote(@PathVariable String token,@RequestBody Note note, HttpServletRequest request,HttpServletResponse response) {
 
-		 noteService.createNote(request.getHeader("token"), note);
+		 //noteService.createNote(request.getHeader("token"), note);
 		 System.out.println("token : "+request.getHeader("token"));
-		 return new ResponseEntity<>("{Note Created}", HttpStatus.OK);
+		 return new ResponseEntity<Note>(noteService.createNote(token, note), HttpStatus.OK);
 	}
 
 	// update
@@ -51,11 +52,11 @@ public class NoteController {
 
 	//@RequestMapping(value = "/deleteNote", method = RequestMethod.DELETE)
 	@DeleteMapping(value="note")
-	public void deleteNote(@RequestBody Note note, HttpServletRequest request) {
+	public void deleteNote(@PathVariable int NoteID, HttpServletRequest request) {
 		System.out.println("I am token at delete method :" + request.getHeader("token"));
-		noteService.deleteNote(request.getHeader("token"), note);
+		//noteService.deleteNote(request.getHeader("token"), note);
 		// System.out.println("-->" + b);
-
+noteService.deleteNote(NoteID);
 	}
 
 	// fetch
